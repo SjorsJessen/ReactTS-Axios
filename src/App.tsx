@@ -12,6 +12,7 @@ interface IPost {
 
 interface IState {
     posts: IPost[];
+    error: string;
 }
 
 class App extends React.Component<{}, IState> {
@@ -19,6 +20,7 @@ class App extends React.Component<{}, IState> {
         super(props);
         this.state = {
             posts: [],
+            error: ""
         }
     };
 
@@ -27,8 +29,11 @@ class App extends React.Component<{}, IState> {
             .then(response => {
                 this.setState({ posts: response.data });
                 console.log("Posts: " + this.state.posts);
-            });
-        
+            })
+            .catch(ex => {
+            const error = ex.response.status === 404 ? "Resource not found" : "An unexpected error has occurred";
+            this.setState({ error });
+        });
     }
 
     public render() {
@@ -42,6 +47,7 @@ class App extends React.Component<{}, IState> {
                         </li>
                     ))}
                 </ul>
+                {this.state.error && <p className="error">{this.state.error}</p>}
             </div>
         );
     }
