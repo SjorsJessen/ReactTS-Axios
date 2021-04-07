@@ -25,7 +25,11 @@ class App extends React.Component<{}, IState> {
     };
 
     public componentDidMount() {
-        axios.get<IPost[]>("https://jsonplaceholder.typicode.com/posts")
+        axios.get<IPost[]>("https://jsonplaceholder.typicode.com/posts", {
+            headers: {
+                "Content-Type" : "application/json"
+            }
+        })
             .then(response => {
                 this.setState({ posts: response.data });
                 console.log("Posts: " + this.state.posts);
