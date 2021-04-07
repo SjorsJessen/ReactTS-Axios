@@ -28,14 +28,16 @@ class App extends React.Component<{}, IState> {
         axios.get<IPost[]>("https://jsonplaceholder.typicode.com/posts", {
             headers: {
                 "Content-Type" : "application/json"
-            }
+            },
+            timeout: 1
         })
             .then(response => {
                 this.setState({ posts: response.data });
                 console.log("Posts: " + this.state.posts);
             })
             .catch(ex => {
-            const error = ex.response.status === 404 ? "Resource not found" : "An unexpected error has occurred";
+            const error = ex.code === "ECONNABORTED" ? "A timeout has occured" : 
+                          ex.response.status === 404 ? "Resource not found" : "An unexpected error has occurred";
             this.setState({ error });
         });
     }
